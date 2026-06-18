@@ -77,3 +77,20 @@ export async function getUserProfile(clerkUserId: string) {
     },
   });
 }
+
+/**
+ * Assign a role to a user in the database.
+ */
+export async function assignRole(clerkUserId: string, roleName: string, _source?: string) {
+  const user = await prisma.user.findUnique({ where: { clerkId: clerkUserId } });
+  if (!user) return;
+
+  const role = await prisma.role.findUnique({ where: { name: roleName as any } });
+  if (!role) return;
+
+  await prisma.userRole.upsert({
+    where: { userId_roleId: { userId: user.id, roleId: role.id } },
+    update: {},
+    create: { userId: user.id, roleId: role.id },
+  });
+}

@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   });
 
   const isAdmin = currentUser?.roles.some(
-    (r) => r.role.name === "ADMIN" || r.role.name === "SUPER_ADMIN"
+    (r: { role: { name: string } }) => r.role.name === "ADMIN" || r.role.name === "SUPER_ADMIN"
   );
   if (!isAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
