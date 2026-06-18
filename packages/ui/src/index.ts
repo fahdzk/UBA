@@ -45,4 +45,4 @@ export {
 } from "./components/select";
 export { Separator } from "./components/separator";
 export { toast, Toaster } from "./components/toast";
-export { cn } from "../lib/utils";
+export { cn } from "./lib/utils";
