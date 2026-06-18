@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     where: { userId: user.id },
     include: { role: true },
   });
-  const roleNames = roles.map((r) => r.role.name);
+  const roleNames = roles.map((r: { role: { name: string } }) => r.role.name);
 
   const where: Record<string, unknown> = {};
   if (roleNames.includes("LAWYER") && !roleNames.includes("ADMIN") && !roleNames.includes("SUPER_ADMIN")) {
