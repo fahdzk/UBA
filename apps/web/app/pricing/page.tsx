@@ -1,6 +1,6 @@
 // apps/web — Pricing page
-import { Header } from "./components/header";
-import { Footer } from "./components/footer";
+import { Header } from "../components/header";
+import { Footer } from "../components/footer";
 import { Button } from "@uba/ui/components/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@uba/ui/components/card";
 import { Badge } from "@uba/ui/components/badge";

@@ -1,3 +1,4 @@
+"use client";
 
 import { ProtectedRoute } from "./components/protected-route";
 import Link from "next/link";
