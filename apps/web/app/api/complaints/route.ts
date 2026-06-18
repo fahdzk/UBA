@@ -2,7 +2,17 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@uba/database";
-import { AuditService } from "@uba/security";
+// Audit logging inline (AuditService not yet available in @uba/security)
+async function logAudit(entry: { userId: string | null; action: string; resource: string; resourceId?: string }) {
+  await prisma.auditLog.create({
+    data: {
+      userId: entry.userId,
+      action: entry.action as any,
+      resource: entry.resource,
+      resourceId: entry.resourceId,
+    },
+  });
+}
 
 export async function GET(req: NextRequest) {
   const { userId } = await auth();
@@ -53,7 +63,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  await AuditService.log({
+  await logAudit({
     userId: user.id,
     action: "CREATE",
     resource: "complaint",

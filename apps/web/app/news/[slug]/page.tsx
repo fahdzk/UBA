@@ -1,7 +1,7 @@
 // apps/web — Single News Article page
 import Link from "next/link";
-import { Header } from "../components/header";
-import { Footer } from "../components/footer";
+import { Header } from "../../components/header";
+import { Footer } from "../../components/footer";
 import { Calendar, User, ArrowLeft, Share2, Facebook, Twitter } from "lucide-react";
 
 interface NewsArticleProps {
