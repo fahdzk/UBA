@@ -1,0 +1,874 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "filteredRelationCount"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum RoleName {
+  SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  AGENCY_ADMIN
+  AGENCY_STAFF
+  LAWYER
+  BA
+  GUEST
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+  BANNED
+}
+
+enum MembershipTier {
+  BA_MONTHLY
+  BA_YEARLY
+  AGENCY_VERIFIED
+  BRAND_PARTNER
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  UNPAID
+  TRIALING
+  PAUSED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+}
+
+enum PaymentStatus {
+  SUCCEEDED
+  PENDING
+  FAILED
+  REFUNDED
+  DISPUTED
+}
+
+enum ComplaintStatus {
+  OPEN
+  UNDER_REVIEW
+  INVESTIGATING
+  RESOLVED
+  REJECTED
+  ESCALATED
+  CLOSED
+}
+
+enum ComplaintPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  WAITING_ON_THIRD_PARTY
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum LegalCaseStatus {
+  INTAKE
+  EVIDENCE_GATHERING
+  LEGAL_REVIEW
+  FILED
+  IN_PROCEEDMENT
+  SETTLED
+  WON
+  LOST
+  DISMISSED
+  APPEALED
+  CLOSED
+}
+
+enum EvidenceVisibility {
+  PRIVATE
+  RESTRICTED
+  AUTHORIZED_ONLY
+}
+
+enum NotificationType {
+  SYSTEM
+  COMPLAINT_UPDATE
+  TICKET_UPDATE
+  PAYMENT
+  MEMBERSHIP
+  LEGAL_CASE
+  SECURITY
+  MESSAGE
+}
+
+enum EmailStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  BOUNCED
+  FAILED
+  COMPLAINED
+}
+
+enum AuditAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  SUSPEND
+  REINSTATE
+  EXPORT
+  PERMISSION_CHANGE
+  ROLE_CHANGE
+  PAYMENT_PROCESSED
+  EMAIL_SENT
+  SETTINGS_CHANGED
+}
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWING
+  SHORTLISTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  SYSTEM
+  EVIDENCE_SHARE
+}
+
+// ============================================================
+// USERS & AUTH
+// ============================================================
+
+model User {
+  id                String     @id @default(cuid())
+  clerkId           String     @unique @map("clerk_id")
+  email             String     @unique
+  emailVerifiedAt   DateTime?  @map("email_verified_at")
+  phone             String?
+  phoneVerifiedAt   DateTime?  @map("phone_verified_at")
+  passwordHash      String?    @map("password_hash")
+  firstName         String     @map("first_name")
+  lastName          String     @map("last_name")
+  avatarUrl         String?    @map("avatar_url")
+  status            UserStatus @default(PENDING_VERIFICATION)
+  mfaEnabled        Boolean    @default(false) @map("mfa_enabled")
+  mfaSecret         String?    @map("mfa_secret")
+  lastLoginAt       DateTime?  @map("last_login_at")
+  lastLoginIp       String?    @map("last_login_ip")
+  failedLoginCount  Int        @default(0) @map("failed_login_count")
+  lockedUntil       DateTime?  @map("locked_until")
+  suspendedAt       DateTime?  @map("suspended_at")
+  suspendedBy       String?    @map("suspended_by")
+  suspensionReason  String?    @map("suspension_reason")
+  deletedAt         DateTime?  @map("deleted_at")
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  roles             UserRole[]
+  sessions          Session[]
+  baProfile         BAProfile?
+  agencyProfile     AgencyProfile?
+  lawyerProfile     LawyerProfile?
+  memberships       Membership[]
+  subscriptions     Subscription[]
+  payments          Payment[]
+  complaintsFiled   Complaint[]    @relation("ComplaintFiled")
+  complaintsAgainst Complaint[]    @relation("ComplaintAgainst")
+  ticketsCreated    Ticket[]       @relation("TicketCreated")
+  ticketsAssigned   Ticket[]       @relation("TicketAssigned")
+  legalCases        LegalCase[]    @relation("CaseBA")
+  caseNotes         CaseNote[]
+  notifications     Notification[]
+  documentsUploaded Document[]     @relation("DocumentUploader")
+  messagesSent      Message[]      @relation("MessageSender")
+  messagesReceived  Message[]      @relation("MessageRecipient")
+  auditLogs         AuditLog[]
+  emailLogs         EmailLog[]
+  newsPosts         NewsPost[]
+  applications      Application[]
+  reviewsWritten    AgencyReview[] @relation("ReviewAuthor")
+  events            Event[]
+
+  @@index([email])
+  @@index([clerkId])
+  @@index([status])
+  @@index([deletedAt])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Role {
+  id          String     @id @default(cuid())
+  name        RoleName   @unique
+  description String?
+  permissions Permission[]
+  users       UserRole[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  roleId    String   @map("role_id")
+  assignedBy String? @map("assigned_by")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+  @@map("user_roles")
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  roleId      String   @map("role_id")
+  resource    String
+  action      String
+  conditions  Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, resource, action])
+  @@index([roleId])
+  @@map("permissions")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  token        String   @unique
+  ipAddress    String?  @map("ip_address")
+  userAgent    String?  @map("user_agent")
+  deviceInfo   Json?    @map("device_info")
+  isSuspicious Boolean  @default(false) @map("is_suspicious")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
+// ============================================================
+// PROFILES
+// ============================================================
+
+model BAProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique @map("user_id")
+  unionLocal      String?  @map("union_local")
+  city            String?
+  state           String?
+  country         String   @default("US")
+  specialties     String[]
+  yearsExperience Int      @default(0) @map("years_experience")
+  bio             String?  @db.Text
+  availability    Boolean  @default(true)
+  verified        Boolean  @default(false)
+  rating          Float    @default(0)
+  totalReviews    Int      @default(0) @map("total_reviews")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs            Job[]
+
+  @@index([userId])
+  @@index([verified])
+  @@index([availability])
+  @@map("ba_profiles")
+}
+
+model AgencyProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique @map("user_id")
+  companyName     String   @map("company_name")
+  slug            String   @unique
+  website         String?
+  logoUrl         String?  @map("logo_url")
+  description     String?  @db.Text
+  address         String?
+  city            String?
+  state           String?
+  country         String   @default("US")
+  zipCode         String?  @map("zip_code")
+  phone           String?
+  taxId           String?  @map("tax_id")
+  verified        Boolean  @default(false)
+  verifiedAt      DateTime? @map("verified_at")
+  riskScore       Int      @default(0) @map("risk_score")
+  rating          Float    @default(0)
+  totalReviews    Int      @default(0) @map("total_reviews")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews         AgencyReview[]
+  jobs            Job[]
+
+  @@index([userId])
+  @@index([slug])
+  @@index([verified])
+  @@index([riskScore])
+  @@map("agency_profiles")
+}
+
+model LawyerProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique @map("user_id")
+  barNumber       String   @unique @map("bar_number")
+  firmName        String?  @map("firm_name")
+  specialties     String[]
+  jurisdiction    String[]
+  yearsExperience Int      @default(0) @map("years_experience")
+  bio             String?  @db.Text
+  website         String?
+  address         String?
+  city            String?
+  state           String?
+  country         String   @default("US")
+  phone           String?
+  verified        Boolean  @default(false)
+  verifiedAt      DateTime? @map("verified_at")
+  rating          Float    @default(0)
+  totalCases      Int      @default(0) @map("total_cases")
+  successfulCases Int      @default(0) @map("successful_cases")
+  hourlyRate      Int?     @map("hourly_rate")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cases           LegalCase[]      @relation("LawyerCases")
+
+  @@index([userId])
+  @@index([barNumber])
+  @@index([verified])
+  @@map("lawyer_profiles")
+}
+
+// ============================================================
+// MEMBERSHIPS & SUBSCRIPTIONS
+// ============================================================
+
+model Membership {
+  id              String         @id @default(cuid())
+  userId          String         @map("user_id")
+  tier            MembershipTier
+  startDate       DateTime       @map("start_date")
+  endDate         DateTime       @map("end_date")
+  autoRenew       Boolean        @default(true) @map("auto_renew")
+  cancelledAt     DateTime?      @map("cancelled_at")
+  cancellationReason String?     @map("cancellation_reason")
+  gracePeriodEnd  DateTime?      @map("grace_period_end")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptions   Subscription[]
+
+  @@index([userId])
+  @@index([tier])
+  @@index([endDate])
+  @@map("memberships")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @map("user_id")
+  membershipId         String             @map("membership_id")
+  stripeSubscriptionId String             @unique @map("stripe_subscription_id")
+  stripeCustomerId     String             @map("stripe_customer_id")
+  stripePriceId        String             @map("stripe_price_id")
+  status               SubscriptionStatus @default(INCOMPLETE)
+  currentPeriodStart   DateTime           @map("current_period_start")
+  currentPeriodEnd     DateTime           @map("current_period_end")
+  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
+  canceledAt           DateTime?          @map("canceled_at")
+  endedAt              DateTime?          @map("ended_at")
+  trialStart           DateTime?          @map("trial_start")
+  trialEnd             DateTime?          @map("trial_end")
+  couponCode           String?            @map("coupon_code")
+  metadata             Json?
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  membership           Membership         @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  payments             Payment[]
+
+  @@index([userId])
+  @@index([membershipId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String        @map("user_id")
+  subscriptionId    String?       @map("subscription_id")
+  stripePaymentId   String?       @unique @map("stripe_payment_id")
+  stripeInvoiceId   String?       @unique @map("stripe_invoice_id")
+  amount            Int
+  currency          String        @default("usd")
+  status            PaymentStatus @default(PENDING)
+  paymentMethod     String?       @map("payment_method")
+  description       String?
+  failureReason     String?       @map("failure_reason")
+  refundAmount      Int?          @map("refund_amount")
+  receiptUrl        String?       @map("receipt_url")
+  metadata          Json?
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscription      Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+// ============================================================
+// JOBS & APPLICATIONS
+// ============================================================
+
+model Job {
+  id              String   @id @default(cuid())
+  agencyId        String   @map("agency_id")
+  baProfileId     String?  @map("ba_profile_id")
+  title           String
+  description     String   @db.Text
+  location        String?
+  city            String?
+  state           String?
+  country         String   @default("US")
+  jobType         String   @map("job_type") // FULL_TIME, PART_TIME, CONTRACT, EVENT
+  rate            String?
+  startDate       DateTime? @map("start_date")
+  endDate         DateTime? @map("end_date")
+  requirements    String[]
+  status          String   @default("OPEN") // OPEN, CLOSED, FILLED, CANCELLED
+  views           Int      @default(0)
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  agency          AgencyProfile @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  baProfile       BAProfile?    @relation(fields: [baProfileId], references: [id], onDelete: SetNull)
+  applications    Application[]
+
+  @@index([agencyId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("jobs")
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  jobId       String            @map("job_id")
+  userId      String            @map("user_id")
+  coverLetter String?           @db.Text @map("cover_letter")
+  resumeUrl   String?           @map("resume_url")
+  status      ApplicationStatus @default(PENDING)
+  notes       String?           @db.Text
+  reviewedAt  DateTime?         @map("reviewed_at")
+  reviewedBy  String?           @map("reviewed_by")
+  deletedAt   DateTime?         @map("deleted_at")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  job         Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, userId])
+  @@index([jobId])
+  @@index([userId])
+  @@index([status])
+  @@map("applications")
+}
+
+// ============================================================
+// REVIEWS
+// ============================================================
+
+model AgencyReview {
+  id          String   @id @default(cuid())
+  agencyId    String   @map("agency_id")
+  authorId    String   @map("author_id")
+  rating      Int
+  title       String?
+  body        String   @db.Text
+  isVerified  Boolean  @default(false) @map("is_verified")
+  isVisible   Boolean  @default(true) @map("is_visible")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  agency      AgencyProfile @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  author      User         @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([agencyId])
+  @@index([authorId])
+  @@index([rating])
+  @@map("agency_reviews")
+}
+
+// ============================================================
+// COMPLAINTS & TICKETS
+// ============================================================
+
+model Complaint {
+  id              String            @id @default(cuid())
+  complainantId   String            @map("complainant_id")
+  respondentId    String?           @map("respondent_id")
+  title           String
+  description     String            @db.Text
+  category        String
+  priority        ComplaintPriority @default(MEDIUM)
+  status          ComplaintStatus   @default(OPEN)
+  resolution      String?           @db.Text
+  resolvedAt      DateTime?         @map("resolved_at")
+  resolvedBy      String?           @map("resolved_by")
+  assignedAdminId String?           @map("assigned_admin_id")
+  deletedAt       DateTime?         @map("deleted_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  complainant     User              @relation("ComplaintFiled", fields: [complainantId], references: [id], onDelete: Cascade)
+  respondent      User?             @relation("ComplaintAgainst", fields: [respondentId], references: [id], onDelete: SetNull)
+  tickets         Ticket[]
+  legalCase       LegalCase?
+  documents       Document[]
+
+  @@index([complainantId])
+  @@index([respondentId])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("complaints")
+}
+
+model Ticket {
+  id              String         @id @default(cuid())
+  complaintId     String?        @map("complaint_id")
+  createdById     String         @map("created_by_id")
+  assignedToId    String?        @map("assigned_to_id")
+  ticketNumber    String         @unique @map("ticket_number")
+  subject         String
+  description     String         @db.Text
+  priority        TicketPriority @default(MEDIUM)
+  status          TicketStatus   @default(OPEN)
+  category        String?
+  resolvedAt      DateTime?      @map("resolved_at")
+  closedAt        DateTime?      @map("closed_at")
+  firstResponseAt DateTime?      @map("first_response_at")
+  slaDeadline     DateTime?      @map("sla_deadline")
+  deletedAt       DateTime?      @map("deleted_at")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
+
+  complaint       Complaint?     @relation(fields: [complaintId], references: [id], onDelete: SetNull)
+  createdBy       User           @relation("TicketCreated", fields: [createdById], references: [id], onDelete: Cascade)
+  assignedTo      User?          @relation("TicketAssigned", fields: [assignedToId], references: [id], onDelete: SetNull)
+  messages        Message[]
+
+  @@index([complaintId])
+  @@index([createdById])
+  @@index([assignedToId])
+  @@index([status])
+  @@index([ticketNumber])
+  @@map("tickets")
+}
+
+// ============================================================
+// LEGAL CASES
+// ============================================================
+
+model LegalCase {
+  id              String           @id @default(cuid())
+  complaintId     String           @unique @map("complaint_id")
+  baId            String           @map("ba_id")
+  lawyerId        String?          @map("lawyer_id")
+  caseNumber      String           @unique @map("case_number")
+  title           String
+  description     String           @db.Text
+  status          LegalCaseStatus  @default(INTAKE)
+  courtName       String?          @map("court_name")
+  caseFiledDate   DateTime?        @map("case_filed_date")
+  judgmentDate    DateTime?        @map("judgment_date")
+  judgmentSummary String?          @db.Text @map("judgment_summary")
+  settlementAmount Int?           @map("settlement_amount")
+  isConfidential  Boolean          @default(true) @map("is_confidential")
+  deletedAt       DateTime?        @map("deleted_at")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  complaint       Complaint        @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  ba              User             @relation("CaseBA", fields: [baId], references: [id], onDelete: Cascade)
+  lawyer          LawyerProfile?  @relation("LawyerCases", fields: [lawyerId], references: [id], onDelete: SetNull)
+  notes           CaseNote[]
+  documents       Document[]
+
+  @@index([complaintId])
+  @@index([baId])
+  @@index([lawyerId])
+  @@index([status])
+  @@index([caseNumber])
+  @@map("legal_cases")
+}
+
+model CaseNote {
+  id          String   @id @default(cuid())
+  caseId      String   @map("case_id")
+  authorId    String   @map("author_id")
+  content     String   @db.Text
+  isPrivate   Boolean  @default(false) @map("is_private")
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  case        LegalCase @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@index([authorId])
+  @@map("case_notes")
+}
+
+// ============================================================
+// NOTIFICATIONS & MESSAGES
+// ============================================================
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String           @map("user_id")
+  type        NotificationType
+  title       String
+  body        String           @db.Text
+  data        Json?
+  readAt      DateTime?        @map("read_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model Message {
+  id          String        @id @default(cuid())
+  ticketId    String?       @map("ticket_id")
+  senderId    String        @map("sender_id")
+  recipientId String        @map("recipient_id")
+  type        MessageType   @default(TEXT)
+  content     String        @db.Text
+  fileUrl     String?       @map("file_url")
+  fileName    String?       @map("file_name")
+  readAt      DateTime?     @map("read_at")
+  deletedAt   DateTime?     @map("deleted_at")
+  createdAt   DateTime      @default(now()) @map("created_at")
+  updatedAt   DateTime      @updatedAt @map("updated_at")
+
+  ticket      Ticket?       @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  sender      User          @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipient   User          @relation("MessageRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+  @@index([senderId])
+  @@index([recipientId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+// ============================================================
+// NEWS & EVENTS
+// ============================================================
+
+model NewsPost {
+  id          String    @id @default(cuid())
+  authorId    String    @map("author_id")
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String    @db.Text
+  coverImage  String?   @map("cover_image")
+  tags        String[]
+  published   Boolean   @default(false)
+  publishedAt DateTime? @map("published_at")
+  featured    Boolean   @default(false)
+  views       Int       @default(0)
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+  @@index([slug])
+  @@index([published])
+  @@index([createdAt])
+  @@map("news_posts")
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  title       String
+  description String?   @db.Text
+  eventType   String    @map("event_type")
+  startDate   DateTime  @map("start_date")
+  endDate     DateTime? @map("end_date")
+  location    String?
+  isPublic    Boolean   @default(true) @map("is_public")
+  metadata    Json?
+  deletedAt   DateTime? @map("deleted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([startDate])
+  @@index([eventType])
+  @@map("events")
+}
+
+// ============================================================
+// EMAIL LOGS
+// ============================================================
+
+model EmailLog {
+  id          String      @id @default(cuid())
+  userId      String?     @map("user_id")
+  templateId  String      @map("template_id")
+  recipient   String
+  subject     String
+  body        String      @db.Text
+  status      EmailStatus @default(QUEUED)
+  sentAt      DateTime?   @map("sent_at")
+  deliveredAt DateTime?   @map("delivered_at")
+  openedAt    DateTime?   @map("opened_at")
+  bouncedAt   DateTime?   @map("bounced_at")
+  failedAt    DateTime?   @map("failed_at")
+  failureReason String?   @map("failure_reason")
+  metadata    Json?
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([templateId])
+  @@index([status])
+  @@index([recipient])
+  @@index([createdAt])
+  @@map("email_logs")
+}
+
+// ============================================================
+// AUDIT LOGS
+// ============================================================
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?     @map("user_id")
+  action      AuditAction
+  resource    String
+  resourceId  String?     @map("resource_id")
+  oldValues   Json?       @map("old_values")
+  newValues   Json?       @map("new_values")
+  ipAddress   String?     @map("ip_address")
+  userAgent   String?     @map("user_agent")
+  metadata    Json?
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([resource])
+  @@index([resourceId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// ============================================================
+// DOCUMENTS
+// ============================================================
+
+model Document {
+  id              String             @id @default(cuid())
+  uploaderId      String             @map("uploader_id")
+  complaintId     String?            @map("complaint_id")
+  legalCaseId     String?            @map("legal_case_id")
+  fileName        String             @map("file_name")
+  originalName    String             @map("original_name")
+  fileType        String             @map("file_type")
+  fileSize        Int                @map("file_size")
+  storageKey      String             @map("storage_key")
+  storageBucket   String             @map("storage_bucket")
+  visibility      EvidenceVisibility @default(PRIVATE)
+  malwareStatus   String             @default("PENDING") // PENDING, CLEAN, INFECTED
+  malwareReport   Json?              @map("malware_report")
+  checksum        String?
+  deletedAt       DateTime?          @map("deleted_at")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  uploader        User               @relation("DocumentUploader", fields: [uploaderId], references: [id], onDelete: Cascade)
+  complaint       Complaint?         @relation(fields: [complaintId], references: [id], onDelete: SetNull)
+  legalCase       LegalCase?         @relation(fields: [legalCaseId], references: [id], onDelete: SetNull)
+
+  @@index([uploaderId])
+  @@index([complaintId])
+  @@index([legalCaseId])
+  @@index([visibility])
+  @@map("documents")
+}

@@ -1,0 +1,27 @@
+import { SignUp } from "@clerk/nextjs";
+import { UBALogo } from "@uba/ui/components/logo";
+
+export default function SignUpPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <UBALogo size={80} />
+          </div>
+          <h1 className="text-2xl font-bold text-[#032B66]">Join UBA</h1>
+          <p className="text-gray-500 mt-1">Create your account to get started</p>
+        </div>
+        <SignUp
+          redirectUrl="/onboarding"
+          appearance={{
+            elements: {
+              formButtonPrimary: "bg-[#032B66] hover:bg-[#032B66]/90",
+              footerActionLink: "text-[#032B66] hover:text-[#032B66]/80",
+            },
+          }}
+        />
+      </div>
+    </div>
+  );
+}

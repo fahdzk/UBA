@@ -1,0 +1,18 @@
+{
+  "extends": "@uba/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@uba/database": ["../../packages/database/src"],
+      "@uba/auth": ["../../packages/auth/src"],
+      "@uba/security": ["../../packages/security/src"],
+      "@uba/billing": ["../../packages/billing/src"],
+      "@uba/email": ["../../packages/email/src"],
+      "@uba/ui/*": ["../../packages/ui/src/*"]
+    },
+    "plugins": [{ "name": "next" }]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

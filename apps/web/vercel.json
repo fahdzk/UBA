@@ -1,0 +1,18 @@
+
+{
+  "buildCommand": "cd ../.. && pnpm turbo build --filter=@uba/web",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "cd ../.. && pnpm install",
+  "regions": ["iad1"],
+  "crons": [
+    {
+      "path": "/api/cron/expire-trials",
+      "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/sla-check",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}
