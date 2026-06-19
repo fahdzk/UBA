@@ -73,7 +73,7 @@ export async function getUserProfile(clerkUserId: string) {
       baProfile: true,
       agencyProfile: true,
       lawyerProfile: true,
-      memberships: { include: { subscription: true } },
+      memberships: { include: { subscriptions: true } },
     },
   });
 }
