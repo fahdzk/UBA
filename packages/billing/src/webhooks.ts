@@ -1,8 +1,15 @@
 // @uba/billing — Stripe webhook handler
-import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@uba/database";
 import { getPlanByStripePriceId } from "./plans";
+
+/** Helper to create a JSON Response without depending on Next.js */
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-12-18.acacia",
@@ -10,7 +17,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-export async function handleStripeWebhook(req: NextRequest) {
+export async function handleStripeWebhook(req: Request) {
   const body = await req.text();
   const signature = req.headers.get("stripe-signature")!;
 
@@ -21,7 +28,7 @@ export async function handleStripeWebhook(req: NextRequest) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Webhook signature verification failed: ${message}`);
-    return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
+    return jsonResponse({ error: "Invalid signature" }, 400);
   }
 
   try {
@@ -70,11 +77,11 @@ export async function handleStripeWebhook(req: NextRequest) {
         console.log(`Unhandled event type: ${event.type}`);
     }
 
-    return NextResponse.json({ received: true });
+    return jsonResponse({ received: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Webhook handler error: ${message}`);
-    return NextResponse.json({ error: "Handler failed" }, { status: 500 });
+    return jsonResponse({ error: "Handler failed" }, 500);
   }
 }
 
