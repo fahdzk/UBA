@@ -9,10 +9,6 @@
     {
       "path": "/api/cron/expire-trials",
       "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/sla-check",
-      "schedule": "0 */6 * * *"
     }
   ]
 }
