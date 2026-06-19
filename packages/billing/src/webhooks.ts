@@ -11,11 +11,23 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-02-24.acacia",
-});
+let stripe: Stripe | null = null;
+function getStripe(): Stripe {
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+      apiVersion: "2025-02-24.acacia",
+    });
+  }
+  return stripe;
+}
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+let webhookSecret: string | null = null;
+function getWebhookSecret(): string {
+  if (!webhookSecret) {
+    webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+  }
+  return webhookSecret;
+}
 
 export async function handleStripeWebhook(req: Request) {
   const body = await req.text();
@@ -24,7 +36,7 @@ export async function handleStripeWebhook(req: Request) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, getWebhookSecret());
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Webhook signature verification failed: ${message}`);
@@ -236,4 +248,4 @@ async function handlePaymentFailed(paymentIntent: Stripe.PaymentIntent) {
   console.log(`Payment failed: ${paymentIntent.id}`);
 }
 
-export { stripe };
+
