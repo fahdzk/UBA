@@ -22,7 +22,7 @@ export async function syncUserToDatabase(clerkUserId: string) {
       email,
       firstName: clerkUser.firstName || "",
       lastName: clerkUser.lastName || "",
-      imageUrl: clerkUser.imageUrl || undefined,
+      avatarUrl: clerkUser.imageUrl || undefined,
       lastLoginAt: new Date(),
     },
     create: {
@@ -31,7 +31,7 @@ export async function syncUserToDatabase(clerkUserId: string) {
       email,
       firstName: clerkUser.firstName || "",
       lastName: clerkUser.lastName || "",
-      imageUrl: clerkUser.imageUrl || undefined,
+      avatarUrl: clerkUser.imageUrl || undefined,
       status: "PENDING_VERIFICATION",
       lastLoginAt: new Date(),
     },

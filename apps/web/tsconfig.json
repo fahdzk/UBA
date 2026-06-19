@@ -11,8 +11,9 @@
       "@uba/email": ["../../packages/email/src"],
       "@uba/ui/*": ["../../packages/ui/src/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "noImplicitAny": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "jest.config.ts", "jest.setup.ts", "**/*.test.ts", "**/*.test.tsx", "__tests__"]
 }

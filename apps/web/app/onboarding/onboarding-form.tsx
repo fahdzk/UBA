@@ -183,7 +183,7 @@ export function OnboardingForm() {
                 <Input
                   id="firstName"
                   value={basicInfo.firstName}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setBasicInfo({ ...basicInfo, firstName: e.target.value })
                   }
                   placeholder="Jane"
@@ -194,7 +194,7 @@ export function OnboardingForm() {
                 <Input
                   id="lastName"
                   value={basicInfo.lastName}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setBasicInfo({ ...basicInfo, lastName: e.target.value })
                   }
                   placeholder="Doe"
@@ -207,7 +207,7 @@ export function OnboardingForm() {
                 id="phone"
                 type="tel"
                 value={basicInfo.phone}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setBasicInfo({ ...basicInfo, phone: e.target.value })
                 }
                 placeholder="(555) 123-4567"
@@ -269,7 +269,7 @@ export function OnboardingForm() {
                 <Input
                   id="city"
                   value={baFields.city}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setBaFields({ ...baFields, city: e.target.value })
                   }
                   placeholder="Los Angeles"
@@ -280,7 +280,7 @@ export function OnboardingForm() {
                 <Input
                   id="state"
                   value={baFields.state}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setBaFields({ ...baFields, state: e.target.value })
                   }
                   placeholder="CA"
@@ -292,7 +292,7 @@ export function OnboardingForm() {
               <Input
                 id="ba-specialties"
                 value={baFields.specialties}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setBaFields({ ...baFields, specialties: e.target.value })
                 }
                 placeholder="e.g. Beverage, Tech, Fashion"
@@ -301,7 +301,6 @@ export function OnboardingForm() {
             <div>
               <Label htmlFor="yearsExperience">Years of Experience</Label>
               <Select
-                id="yearsExperience"
                 value={baFields.yearsExperience}
                 onValueChange={(val) =>
                   setBaFields({ ...baFields, yearsExperience: val })
@@ -325,7 +324,7 @@ export function OnboardingForm() {
               <Input
                 id="companyName"
                 value={agencyFields.companyName}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setAgencyFields({ ...agencyFields, companyName: e.target.value })
                 }
                 placeholder="Acme Staffing Inc."
@@ -337,7 +336,7 @@ export function OnboardingForm() {
                 id="website"
                 type="url"
                 value={agencyFields.website}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setAgencyFields({ ...agencyFields, website: e.target.value })
                 }
                 placeholder="https://example.com"
@@ -348,7 +347,7 @@ export function OnboardingForm() {
               <Textarea
                 id="description"
                 value={agencyFields.description}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setAgencyFields({ ...agencyFields, description: e.target.value })
                 }
                 placeholder="Tell us about your agency&hellip;"
@@ -367,7 +366,7 @@ export function OnboardingForm() {
                 <Input
                   id="barNumber"
                   value={lawyerFields.barNumber}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setLawyerFields({ ...lawyerFields, barNumber: e.target.value })
                   }
                   placeholder="123456"
@@ -378,7 +377,7 @@ export function OnboardingForm() {
                 <Input
                   id="jurisdiction"
                   value={lawyerFields.jurisdiction}
-                  onChange={(e) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setLawyerFields({ ...lawyerFields, jurisdiction: e.target.value })
                   }
                   placeholder="e.g. California"
@@ -390,7 +389,7 @@ export function OnboardingForm() {
               <Input
                 id="firmName"
                 value={lawyerFields.firmName}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setLawyerFields({ ...lawyerFields, firmName: e.target.value })
                 }
                 placeholder="Smith & Associates"
@@ -401,7 +400,7 @@ export function OnboardingForm() {
               <Input
                 id="lawyer-specialties"
                 value={lawyerFields.specialties}
-                onChange={(e) =>
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setLawyerFields({ ...lawyerFields, specialties: e.target.value })
                 }
                 placeholder="e.g. Employment Law, Labor Disputes"

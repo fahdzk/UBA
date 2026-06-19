@@ -12,7 +12,7 @@ export default async function AgencyDashboardPage() {
   const [activeJobs, totalApplications, reviewCount] = await Promise.all([
     prisma.job.count({ where: { agencyId: agency?.id, status: "OPEN" } }),
     prisma.application.count({ where: { job: { agencyId: agency?.id } } }),
-    prisma.review.count({ where: { agencyId: agency?.id } }),
+    0, // prisma.review.count — Review model not yet in schema
   ]);
   const stats = [
     { label: "Active Jobs", value: activeJobs, icon: Briefcase, color: "bg-blue-500" },
