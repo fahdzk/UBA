@@ -52,16 +52,7 @@ export function Header() {
           <SignedOut>
             <SignInButton mode="modal">
               <span
-                className="border-2 px-6 py-2 rounded font-bold text-sm uppercase hover:text-white transition-colors cursor-pointer"
-                style={{ borderColor: "#001f3f", color: "#001f3f" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#001f3f";
-                  e.currentTarget.style.color = "#fff";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "#001f3f";
-                }}
+                className="border-2 border-[#001f3f] text-[#001f3f] px-6 py-2 rounded font-bold text-sm uppercase hover:bg-[#001f3f] hover:text-white transition-colors cursor-pointer"
               >
                 Login
               </span>

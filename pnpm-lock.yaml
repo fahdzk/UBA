@@ -31,7 +31,7 @@ importers:
         version: link:../../packages/billing
       '@uba/database':
         specifier: '*'
-        version: link:../../packages/db
+        version: link:../../packages/database
       '@uba/email':
         specifier: '*'
         version: link:../../packages/email
@@ -101,7 +101,7 @@ importers:
         version: 6.39.5(next@15.5.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@uba/database':
         specifier: '*'
-        version: link:../db
+        version: link:../database
     devDependencies:
       '@prisma/client':
         specifier: ^5.22.0
@@ -117,7 +117,7 @@ importers:
     dependencies:
       '@uba/database':
         specifier: '*'
-        version: link:../db
+        version: link:../database
       stripe:
         specifier: ^17.3.0
         version: 17.7.0
@@ -145,24 +145,11 @@ importers:
         specifier: ^4.19.0
         version: 4.22.4
 
-  packages/db:
-    dependencies:
-      '@prisma/client':
-        specifier: ^5.22.0
-        version: 5.22.0(prisma@5.22.0)
-    devDependencies:
-      prisma:
-        specifier: ^5.22.0
-        version: 5.22.0
-      tsx:
-        specifier: ^4.19.0
-        version: 4.22.4
-
   packages/email:
     dependencies:
       '@uba/database':
         specifier: '*'
-        version: link:../db
+        version: link:../database
       react:
         specifier: ^19.0.0
         version: 19.2.7
@@ -178,7 +165,7 @@ importers:
     dependencies:
       '@uba/database':
         specifier: '*'
-        version: link:../db
+        version: link:../database
     devDependencies:
       '@uba/typescript-config':
         specifier: '*'
@@ -231,6 +218,12 @@ importers:
         specifier: ^2.5.0
         version: 2.6.1
     devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.17
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.17)
       '@uba/typescript-config':
         specifier: '*'
         version: link:../typescript-config

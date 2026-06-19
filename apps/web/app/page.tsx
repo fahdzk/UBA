@@ -60,16 +60,7 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/report"
-                  className="border-2 px-8 py-4 rounded font-bold text-base uppercase flex items-center gap-2 hover:text-white transition-colors"
-                  style={{ borderColor: "#001f3f", color: "#001f3f" }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#001f3f";
-                    e.currentTarget.style.color = "#fff";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#001f3f";
-                  }}
+                  className="border-2 border-[#001f3f] text-[#001f3f] px-8 py-4 rounded font-bold text-base uppercase flex items-center gap-2 hover:bg-[#001f3f] hover:text-white transition-colors"
                 >
                   Report an Agency <i className="fas fa-arrow-right"></i>
                 </Link>

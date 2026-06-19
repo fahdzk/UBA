@@ -347,7 +347,7 @@ export function OnboardingForm() {
               <Textarea
                 id="description"
                 value={agencyFields.description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                   setAgencyFields({ ...agencyFields, description: e.target.value })
                 }
                 placeholder="Tell us about your agency&hellip;"
