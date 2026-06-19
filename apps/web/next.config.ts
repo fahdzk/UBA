@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable if using server actions
     serverActions: { bodySizeLimit: "2mb" },
+    serverComponentsExternalPackages: ["@prisma/client", "prisma"],
   },
 };
 
