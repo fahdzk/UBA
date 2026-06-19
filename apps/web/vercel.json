@@ -1,6 +1,6 @@
 
 {
-  "buildCommand": "cd ../.. && pnpm turbo build --filter=@uba/web",
+  "buildCommand": "cd ../.. && npx prisma generate --schema=packages/database/prisma/schema.prisma && pnpm turbo build --filter=@uba/web",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "cd ../.. && pnpm install",
