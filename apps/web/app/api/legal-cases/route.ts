@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
   const cases = await prisma.legalCase.findMany({
     where,
     include: {
-      ba: { select: { firstName: true, lastName: true } },
-      lawyer: { select: { firstName: true, lastName: true } },
+      ba: { include: { user: { select: { firstName: true, lastName: true } } } },
+      lawyer: { include: { user: { select: { firstName: true, lastName: true } } } },
       complaint: { select: { id: true, title: true } },
     },
     orderBy: { createdAt: "desc" },
