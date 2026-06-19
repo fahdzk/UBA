@@ -12,6 +12,9 @@
     "db:seed": "turbo run db:seed",
     "db:studio": "turbo run db:studio"
   },
+  "dependencies": {
+    "next": "^15.1.0"
+  },
   "devDependencies": {
     "turbo": "^2.3.0",
     "typescript": "^5.6.0"
