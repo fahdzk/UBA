@@ -1,11 +1,12 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { handleStripeWebhook } from "@uba/billing";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+    const { handleStripeWebhook } = await import("@uba/billing");
     await handleStripeWebhook(req);
     return NextResponse.json({ received: true });
   } catch (err: any) {

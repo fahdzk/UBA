@@ -11,14 +11,18 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+let _stripe: Stripe | null = null;
+
 function getStripe(): Stripe {
+  if (_stripe) return _stripe;
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) {
     throw new Error("STRIPE_SECRET_KEY is not set");
   }
-  return new Stripe(key, {
+  _stripe = new Stripe(key, {
     apiVersion: "2025-02-24.acacia",
   });
+  return _stripe;
 }
 
 function getWebhookSecret(): string {
