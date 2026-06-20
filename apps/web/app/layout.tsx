@@ -2,6 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Header } from "./components/header";
+import { Footer } from "./components/footer";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,7 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
           />
         </head>
-        <body className={`${inter.className} bg-gray-50`}>{children}</body>
+        <body className={`${inter.className} bg-gray-50`}>
+          <Header />
+          {children}
+          <Footer />
+        </body>
       </html>
     </ClerkProvider>
   );

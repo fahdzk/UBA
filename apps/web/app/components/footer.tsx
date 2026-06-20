@@ -28,10 +28,8 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
               <li><Link href="/about" className="hover:text-white transition">About</Link></li>
-              <li><Link href="/membership" className="hover:text-white transition">Membership</Link></li>
               <li><Link href="/agency-ratings" className="hover:text-white transition">Agency Ratings</Link></li>
-              <li><Link href="/legal-defense" className="hover:text-white transition">Legal Defense</Link></li>
-              <li><Link href="/certification" className="hover:text-white transition">Certification</Link></li>
+              <li><Link href="/pricing" className="hover:text-white transition">Pricing</Link></li>
             </ul>
           </div>
 
@@ -41,7 +39,6 @@ export function Footer() {
               Resources
             </h4>
             <ul className="space-y-2.5 text-sm" style={{ color: "#94a3b8" }}>
-              <li><Link href="/resources" className="hover:text-white transition">Resource Center</Link></li>
               <li><Link href="/news" className="hover:text-white transition">News</Link></li>
               <li><Link href="/contact" className="hover:text-white transition">Contact</Link></li>
             </ul>

@@ -7,11 +7,7 @@ import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
 
 const navLinks = [
   { href: "/about", label: "About" },
-  { href: "/membership", label: "Membership" },
   { href: "/agency-ratings", label: "Agency Ratings" },
-  { href: "/legal-defense", label: "Legal Defense" },
-  { href: "/certification", label: "Certification" },
-  { href: "/resources", label: "Resources" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
 ];
