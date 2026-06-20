@@ -64,13 +64,13 @@ export function canAccessRoute(userRoles: RoleName[], pathname: string): boolean
 
 export function getPortalHome(roles: RoleName[]): string {
   if (roles.includes(RoleName.SUPER_ADMIN) || roles.includes(RoleName.ADMIN) || roles.includes(RoleName.MODERATOR)) {
-    return "/admin/dashboard";
+    return "/portal/admin-portal/dashboard";
   }
-  if (roles.includes(RoleName.LAWYER)) return "/lawyer/dashboard";
+  if (roles.includes(RoleName.LAWYER)) return "/portal/lawyer-portal/dashboard";
   if (roles.includes(RoleName.AGENCY_ADMIN) || roles.includes(RoleName.AGENCY_STAFF)) {
-    return "/agency/dashboard";
+    return "/portal/agency-portal/dashboard";
   }
-  if (roles.includes(RoleName.BA)) return "/ba/dashboard";
+  if (roles.includes(RoleName.BA)) return "/portal/ba-portal/dashboard";
   return "/";
 }
 
