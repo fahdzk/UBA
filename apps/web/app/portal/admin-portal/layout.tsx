@@ -2,6 +2,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getUserRoles } from "@uba/auth";
+import { RoleName } from "@uba/database";
 import {
   LayoutDashboard, Users, MessageSquare, Ticket, Briefcase,
   Building2, BarChart3, Newspaper, Settings, FileText, Bell,
@@ -24,6 +26,13 @@ const navItems = [
 export default async function AdminPortalLayout({ children }: { children: React.ReactNode }) {
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
+
+  const roles = await getUserRoles(userId);
+  const isAdmin = roles.some((r) =>
+    r === RoleName.ADMIN || r === RoleName.SUPER_ADMIN || r === RoleName.MODERATOR
+  );
+  if (!isAdmin) redirect("/dashboard");
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <aside className="w-64 bg-[#032B66] text-white shrink-0 sticky top-0 h-screen overflow-y-auto">
