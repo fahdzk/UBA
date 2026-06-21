@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AgencyRatingBadge } from "./AgencyRatingBadge";
 import { Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AgencyRatingFormProps {
   agencyId: string;

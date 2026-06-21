@@ -11,12 +11,13 @@ import { cn } from "@/lib/utils";
 
 const TABS = ["Overview", "Reviews", "Violations", "Jobs"] as const;
 
-export default function AgencyDetailPage({ params }: { params: { slug: string } }) {
+export default function AgencyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = params as unknown as { slug: string };
   const [activeTab, setActiveTab] = useState<string>("Overview");
 
   const agency = {
     name: "Elite Promotions",
-    slug: params.slug,
+    slug,
     city: "Los Angeles",
     state: "CA",
     ubaScore: 87,

@@ -1,8 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Shield, Users, Star, Scale, ArrowRight, Check } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export default function LandingPage() {
   return (

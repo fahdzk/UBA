@@ -15,7 +15,7 @@ const MOCK_AGENCIES = [
   { name: "Red Flag Agency", slug: "red-flag-agency", city: "Phoenix", state: "AZ", ubaScore: 18, tier: "red", avgRating: 1.8, totalRatings: 15, violationCount: 12, isCertified: false, isBlacklisted: true },
 ];
 
-export function AgencyDirectory() {
+export default function AgencyDirectory() {
   const [search, setSearch] = useState("");
   const [selectedTier, setSelectedTier] = useState<string>("all");
   const [selectedState, setSelectedState] = useState<string>("");

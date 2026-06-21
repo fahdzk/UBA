@@ -1,10 +1,10 @@
 import { createRouteHandler } from "uploadthing/next";
-import { ourFileRouter } from "./core";
+import { ourFileRouter } from "@/lib/uploadthing/core";
 
 export const { GET, POST } = createRouteHandler({
   router: ourFileRouter,
   config: {
-    uploadthingSecret: process.env.UPLOADTHING_SECRET,
-    uploadthingId: process.env.UPLOADTHING_APP_ID,
+    token: process.env.UPLOADTHING_SECRET,
+    isDev: process.env.NODE_ENV === "development",
   },
 });

@@ -64,7 +64,7 @@ export async function POST(
     await prisma.applicationGig.createMany({
       data: gigs.map((gig: Record<string, unknown>, index: number) => ({
         applicationId: id,
-        eventName: gig.eventName as string,
+        event_name: gig.eventName as string,
         agencyName: gig.agencyName as string,
         clientBrand: gig.clientBrand as string,
         location: gig.location as string,

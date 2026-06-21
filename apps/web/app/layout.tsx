@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const inter = Inter({
@@ -26,12 +27,13 @@ export const metadata: Metadata = {
     "job board",
     "worker rights",
   ],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 };
 
 export default function RootLayout({
@@ -42,7 +44,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
       <body className="min-h-screen bg-surface-raised antialiased">
-        {children}
+        <ClerkProvider>
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

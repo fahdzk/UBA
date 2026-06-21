@@ -14,7 +14,7 @@ const MOCK_JOBS = [
   { id: "6", title: "Street Team - Energy Drink Launch", agencyName: "Street Team Pro", agencyScore: 45, positionType: "street_team", hourlyRate: 25, eventDate: "2026-07-28", venue: "Venice Beach", city: "Los Angeles", state: "CA", spotsAvailable: 10, positionsFilled: 7, applicationDeadline: "2026-07-25T23:59:00Z", decisionByDate: "2026-07-26T23:59:00Z", hnaCompliant: false, brandName: "PowerSurge", description: "Distribute samples at high-traffic beach location. Must be energetic and outgoing." },
 ];
 
-export function JobBoard() {
+export default function JobBoard() {
   const [search, setSearch] = useState("");
   const [positionFilter, setPositionFilter] = useState("all");
   const [stateFilter, setStateFilter] = useState("");

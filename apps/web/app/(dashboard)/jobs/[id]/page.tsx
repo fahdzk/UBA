@@ -7,11 +7,12 @@ import { JobApplicationForm } from "@/components/jobs/JobApplicationForm";
 import { HNAStatusIndicator } from "@/components/jobs/HNAStatusIndicator";
 import { Briefcase, MapPin, Calendar, DollarSign, Clock, Users, Building2, Shield } from "lucide-react";
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = params as unknown as { id: string };
   const [showApply, setShowApply] = useState(false);
 
   const job = {
-    id: params.id,
+    id,
     title: "Brand Ambassador - Tech Conference",
     agencyName: "Elite Promotions",
     agencyScore: 87,

@@ -77,7 +77,7 @@ export default function PricingPage() {
                   ))}
                 </ul>
                 <Link href="/sign-up">
-                  <Button className="w-full" variant={plan.badge === "Best Value" ? "default" : "outline"}>
+                  <Button className="w-full" variant={plan.badge === "Best Value" ? "primary" : "outline"}>
                     Get Started
                   </Button>
                 </Link>
