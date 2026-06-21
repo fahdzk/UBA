@@ -10,10 +10,10 @@ export default function ContactPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#032B66] py-20">
+      <section className="bg-[#032B66] py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">Contact Us</h1>
-          <p className="mt-4 text-lg text-blue-200 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white sm:text-5xl">Contact Us</h1>
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-blue-200 max-w-2xl mx-auto">
             Have a question or need support? We're here to help. Reach out to the UBA team
             and we'll get back to you as soon as possible.
           </p>
@@ -21,9 +21,9 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Content */}
-      <section className="py-16">
+      <section className="py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
             {/* Contact Form */}
             <div>
               <h2 className="text-2xl font-bold text-[#032B66] mb-6">Send Us a Message</h2>
@@ -81,7 +81,7 @@ export default function ContactPage() {
               </div>
 
               {/* Map Placeholder */}
-              <div className="mt-8 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center">
+              <div className="mt-8 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-8 sm:p-12 text-center">
                 <MapPin className="mx-auto h-12 w-12 text-gray-400" />
                 <p className="mt-4 text-sm text-gray-500">Map placeholder</p>
                 <p className="text-xs text-gray-400">1200 K Street NW, Washington DC</p>
@@ -92,7 +92,7 @@ export default function ContactPage() {
       </section>
 
       {/* Emergency Banner */}
-      <section className="bg-[#F21B23] py-8">
+      <section className="bg-[#F21B23] py-6 sm:py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-xl font-bold text-white">Need Urgent Legal Assistance?</h3>
           <p className="mt-2 text-red-100">

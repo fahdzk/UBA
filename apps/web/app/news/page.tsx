@@ -61,10 +61,10 @@ export default function NewsPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-[#032B66] py-20">
+      <section className="bg-[#032B66] py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">Latest News</h1>
-          <p className="mt-4 text-lg text-blue-200 max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white sm:text-5xl">Latest News</h1>
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-blue-200 max-w-2xl mx-auto">
             Stay updated with the latest from UBA — member stories, legal victories,
             program announcements, and industry insights.
           </p>
@@ -72,9 +72,9 @@ export default function NewsPage() {
       </section>
 
       {/* News Grid */}
-      <section className="py-16">
+      <section className="py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {newsArticles.map((article) => (
               <article
                 key={article.slug}
@@ -122,7 +122,7 @@ export default function NewsPage() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="bg-gray-50 py-12">
+      <section className="bg-gray-50 py-10 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold text-[#032B66]">Stay Informed</h2>
           <p className="mt-2 text-gray-600 max-w-xl mx-auto">

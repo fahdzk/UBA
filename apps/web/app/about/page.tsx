@@ -46,8 +46,8 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <main className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold text-[#032B66]">About UBA</h1>
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:py-16 sm:px-6 lg:px-8">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#032B66]">About UBA</h1>
         <div className="mt-8 space-y-6 text-gray-700 leading-relaxed">
           <p className="text-lg">
             The <strong>Union of Brand Ambassadors (UBA)</strong> is the premier platform dedicated to
@@ -87,7 +87,7 @@ export default function AboutPage() {
             UBA is led by a dedicated team of professionals committed to protecting brand ambassadors and
             building a fair, transparent ecosystem for everyone who represents brands.
           </p>
-          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {teamMembers.map((member) => (
               <div
                 key={member.name}

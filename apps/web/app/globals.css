@@ -79,6 +79,27 @@
   }
 }
 
+/* Mobile-first global overrides */
+@layer base {
+  /* Prevent horizontal overflow on mobile */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure images are responsive by default */
+  img, svg, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Better tap targets on mobile */
+  @media (max-width: 640px) {
+    button, a, input, select, textarea {
+      min-height: 36px;
+    }
+  }
+}
+
 @layer components {
   /* Card base */
   .card {

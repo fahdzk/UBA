@@ -46,12 +46,12 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <main className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#032B66]">Pricing</h1>
-          <p className="mt-4 text-lg text-gray-600">Choose the plan that fits your needs</p>
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:py-16 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[#032B66]">Pricing</h1>
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600">Choose the plan that fits your needs</p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {plans.map((plan) => (
             <Card key={plan.name} className={`relative ${plan.badge === "Best Value" ? "border-[#032B66] shadow-lg scale-105" : ""}`}>
               {plan.badge && (

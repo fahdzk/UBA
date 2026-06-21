@@ -12,19 +12,19 @@ const agencies = [
 export default function AgencyRatingsPage() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <Link href="/" className="text-sm font-bold uppercase tracking-wide mb-8 inline-block" style={{ color: "#001f3f" }}>
+      <div className="container mx-auto px-4 py-10 sm:py-16 max-w-4xl">
+        <Link href="/" className="text-sm font-bold uppercase tracking-wide mb-6 sm:mb-8 inline-block" style={{ color: "#001f3f" }}>
           ← Back to Home
         </Link>
-        <h1 className="text-4xl font-extrabold mb-2" style={{ color: "#001f3f" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold mb-2" style={{ color: "#001f3f" }}>
           Agency Ratings
         </h1>
-        <p className="text-gray-600 text-lg mb-12">
+        <p className="text-gray-600 text-base sm:text-lg mb-8 sm:mb-12">
           Transparent ratings. Real reviews. Informed decisions.
         </p>
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="p-4 bg-gray-50 border-b border-gray-100">
+          <div className="p-3 sm:p-4 bg-gray-50 border-b border-gray-100">
             <div className="relative">
               <input
                 type="text"
@@ -39,11 +39,11 @@ export default function AgencyRatingsPage() {
             {agencies.map((agency) => (
               <div
                 key={agency.name}
-                className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-gray-50 transition-colors"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                   <div
-                    className={`w-12 h-12 ${agency.bg} text-white rounded-full flex items-center justify-center font-bold text-sm`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 ${agency.bg} text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm shrink-0`}
                   >
                     {agency.initials}
                   </div>
@@ -62,11 +62,11 @@ export default function AgencyRatingsPage() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-8">
-                  <div className={`text-3xl font-extrabold ${agency.scoreColor}`}>
+                <div className="flex items-center gap-4 sm:gap-8 sm:pl-14">
+                  <div className={`text-2xl sm:text-3xl font-extrabold ${agency.scoreColor}`}>
                     {agency.score}
                   </div>
-                  <div className="text-xs font-bold text-gray-400 uppercase w-24 text-right">
+                  <div className="text-xs font-bold text-gray-400 uppercase text-right">
                     {agency.label}
                   </div>
                 </div>
@@ -78,7 +78,7 @@ export default function AgencyRatingsPage() {
         <div className="mt-8 text-center">
           <Link
             href="/report"
-            className="inline-block border-2 border-[#001f3f] text-[#001f3f] px-8 py-4 rounded font-bold text-base uppercase hover:bg-[#001f3f] hover:text-white transition-colors"
+            className="inline-block border-2 border-[#001f3f] text-[#001f3f] px-6 sm:px-8 py-3 sm:py-4 rounded font-bold text-sm sm:text-base uppercase hover:bg-[#001f3f] hover:text-white transition-colors"
           >
             Report an Agency
           </Link>

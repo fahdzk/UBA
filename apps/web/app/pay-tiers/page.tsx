@@ -11,37 +11,37 @@ const tiers = [
 export default function PayTiersPage() {
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        <Link href="/" className="text-sm font-bold uppercase tracking-wide mb-8 inline-block" style={{ color: "#001f3f" }}>
+      <div className="container mx-auto px-4 py-10 sm:py-16 max-w-4xl">
+        <Link href="/" className="text-sm font-bold uppercase tracking-wide mb-6 sm:mb-8 inline-block" style={{ color: "#001f3f" }}>
           ← Back to Home
         </Link>
-        <h1 className="text-4xl font-extrabold mb-2" style={{ color: "#001f3f" }}>
+        <h1 className="text-3xl sm:text-4xl font-extrabold mb-2" style={{ color: "#001f3f" }}>
           Pay Tiers
         </h1>
-        <p className="text-gray-600 text-lg mb-12">
+        <p className="text-gray-600 text-base sm:text-lg mb-8 sm:mb-12">
           Clear. Fair. Progressive. 20% increases at every level.
         </p>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {tiers.map((tier) => (
             <div
               key={tier.n}
-              className="bg-white rounded-2xl border border-gray-100 p-6 flex items-center gap-6 shadow-sm"
+              className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 shadow-sm"
             >
               <div
-                className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-extrabold shrink-0"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-extrabold shrink-0"
                 style={{ backgroundColor: "#001f3f" }}
               >
                 {tier.n}
               </div>
               <div className="flex-grow">
-                <h3 className="font-extrabold text-lg uppercase tracking-wide" style={{ color: "#001f3f" }}>
+                <h3 className="font-extrabold text-base sm:text-lg uppercase tracking-wide" style={{ color: "#001f3f" }}>
                   {tier.label}
                 </h3>
-                <p className="text-gray-500 text-sm">{tier.desc}</p>
+                <p className="text-gray-500 text-xs sm:text-sm">{tier.desc}</p>
               </div>
-              <div className="text-right shrink-0">
-                <div className="text-3xl font-extrabold" style={{ color: "#d90429" }}>
+              <div className="text-left sm:text-right shrink-0">
+                <div className="text-2xl sm:text-3xl font-extrabold" style={{ color: "#d90429" }}>
                   {tier.price}
                 </div>
                 <div className="text-[10px] font-bold text-gray-400 uppercase">/ HOUR</div>
@@ -53,7 +53,7 @@ export default function PayTiersPage() {
         <div className="mt-8 text-center">
           <Link
             href="/sign-up"
-            className="inline-block text-white px-8 py-4 rounded font-bold text-base uppercase hover:bg-red-700 transition-colors"
+            className="inline-block text-white px-6 sm:px-8 py-3 sm:py-4 rounded font-bold text-sm sm:text-base uppercase hover:bg-red-700 transition-colors"
             style={{ backgroundColor: "#d90429" }}
           >
             Join UBA to Access These Rates

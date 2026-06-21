@@ -1,13 +1,13 @@
-// apps/web — Site footer (matches reference design)
+// apps/web — Site footer (responsive)
 import Link from "next/link";
 
 export function Footer() {
   return (
     <footer style={{ backgroundColor: "#001f3f" }} className="text-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-5">
-          {/* Brand */}
-          <div className="md:col-span-2">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-5">
+          {/* Brand — full width on mobile */}
+          <div className="col-span-2 sm:col-span-3 md:col-span-2">
             <div className="flex items-center gap-3 mb-5">
               <img
                 src="https://cdn.screenshottocode.com/cl_-oLgCQFkS7ZtvK5ItV.jpg"
@@ -57,8 +57,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <p className="text-sm" style={{ color: "#64748b" }}>
+        <div className="mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+          <p className="text-sm text-center sm:text-left" style={{ color: "#64748b" }}>
             &copy; {new Date().getFullYear()} UBA — Union of Brand Ambassadors. All rights reserved.
           </p>
           <p className="text-xs" style={{ color: "#475569" }}>
