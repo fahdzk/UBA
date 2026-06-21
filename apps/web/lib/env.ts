@@ -1,0 +1,58 @@
+import { z } from "zod";
+
+const serverEnvSchema = z.object({
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  CLERK_SECRET_KEY: z.string().min(1),
+  UPLOADTHING_SECRET: z.string().min(1),
+  CRON_SECRET: z.string().min(1),
+});
+
+const clientEnvSchema = z.object({
+  NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+});
+
+function parseEnv() {
+  const isServer = typeof window === "undefined";
+
+  if (isServer) {
+    const serverResult = serverEnvSchema.safeParse(process.env);
+    if (!serverResult.success) {
+      console.error("❌ Invalid server environment variables:", serverResult.error.flatten().fieldErrors);
+      throw new Error("Invalid server environment variables");
+    }
+  }
+
+  const clientResult = clientEnvSchema.safeParse({
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  });
+
+  if (!clientResult.success) {
+    console.error("❌ Invalid client environment variables:", clientResult.error.flatten().fieldErrors);
+    throw new Error("Invalid client environment variables");
+  }
+
+  return { ...clientResult.data, ...(isServer ? serverEnvSchema.parse(process.env) : {}) };
+}
+
+export const env = parseEnv();
+
+// Type-safe exports for common vars
+export const serverEnv = {
+  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY!,
+  UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET!,
+  CRON_SECRET: process.env.CRON_SECRET!,
+};
+
+export const clientEnv = {
+  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
+  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
+};

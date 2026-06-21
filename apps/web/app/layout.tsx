@@ -1,34 +1,43 @@
-// apps/web — Public-facing UBA website
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Header } from "./components/header";
-import { Footer } from "./components/footer";
+import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  variable: "--font-oswald",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "UBA — Union of Brand Ambassadors",
-  description: "Protecting the People Who Build Brands. Join the premier platform for brand ambassadors across the nation.",
+  description:
+    "The professional union for brand ambassadors. Find jobs, rate agencies, file violations, and protect your rights.",
+  keywords: [
+    "brand ambassador",
+    "union",
+    "UBA",
+    "agency ratings",
+    "job board",
+    "worker rights",
+  ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-          />
-        </head>
-        <body className={`${inter.className} bg-gray-50`}>
-          <Header />
-          {children}
-          <Footer />
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
+      <body className="min-h-screen bg-surface-raised antialiased">
+        {children}
+      </body>
+    </html>
   );
 }
