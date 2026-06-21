@@ -15,8 +15,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    // Enable if using server actions
-    serverActions: { bodySizeLimit: "2mb" },
+    // serverActions removed — not used, causes clientReferenceManifest prerender bug in Next.js 15
   },
   serverExternalPackages: ["@prisma/client", "prisma"],
 };
