@@ -157,6 +157,28 @@ enum ApplicationStatus {
   WITHDRAWN
 }
 
+enum AmbassadorApplicationStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_REVIEW
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  BLACKLISTED
+}
+
+enum AmbassadorType {
+  BRAND_AMBASSADOR
+  PRODUCT_SPECIALIST
+}
+
+enum TravelWillingness {
+  LOCAL_ONLY
+  STATEWIDE
+  NATIONWIDE
+  INTERNATIONAL
+}
+
 enum MessageType {
   TEXT
   FILE
@@ -218,6 +240,7 @@ model User {
   applications      Application[]
   reviewsWritten    AgencyReview[] @relation("ReviewAuthor")
   events            Event[]
+  ambassadorApplications AmbassadorApplication[]
 
   @@index([email])
   @@index([clerkId])
@@ -871,4 +894,118 @@ model Document {
   @@index([legalCaseId])
   @@index([visibility])
   @@map("documents")
+}
+
+// ============================================================
+// AMBASSADOR APPLICATIONS
+// ============================================================
+
+model AmbassadorApplication {
+  id                  String                  @id @default(cuid())
+  userId              String?                 @map("user_id")
+  clerkId             String?                 @unique @map("clerk_id")
+  status              AmbassadorApplicationStatus @default(DRAFT)
+  applicationType     AmbassadorType          @map("application_type")
+
+  // Personal Info
+  firstName           String                  @map("first_name")
+  lastName            String                  @map("last_name")
+  email               String
+  phone               String?
+  city                String?
+  state               String?
+  country             String                  @default("US")
+  zipCode             String?                 @map("zip_code")
+  dateOfBirth         DateTime?               @map("date_of_birth")
+  age                 Int?
+  gender              String?
+
+  // Physical Details
+  heightFeet          Int?                    @map("height_feet")
+  heightInches        Int?                    @map("height_inches")
+  weight              Int?
+  shirtSize           String?                 @map("shirt_size")
+  pantSize            String?                 @map("pant_size")
+  shoeSize            String?                 @map("shoe_size")
+  ethnicity           String?
+  languagesSpoken     String[]                @map("languages_spoken")
+  visibleTattoos      Boolean                 @default(false) @map("visible_tattoos")
+  visiblePiercings    Boolean                 @default(false) @map("visible_piercings")
+  smoker              Boolean                 @default(false)
+
+  // Experience
+  discoverySource     String?                 @map("discovery_source")
+  yearsExperience     String?                 @map("years_experience")
+  eventTypesWorked    String[]                @map("event_types_worked")
+  experienceDescription String?               @db.Text @map("experience_description")
+
+  // Agencies
+  agenciesWorkedWith  String[]                @map("agencies_worked_with")
+
+  // Availability & Travel
+  travelWillingness   TravelWillingness?      @map("travel_willingness")
+  hasDriversLicense    Boolean                 @default(false) @map("has_drivers_license")
+  hasOwnVehicle       Boolean                 @default(false) @map("has_own_vehicle")
+  hasPassport         Boolean                 @default(false) @map("has_passport")
+  canLift50lbs        Boolean                 @default(false) @map("can_lift_50lbs")
+  weekendAvailability Boolean                 @default(false) @map("weekend_availability")
+  overnightTravelOk   Boolean                 @default(false) @map("overnight_travel_ok")
+  lastMinuteOk        Boolean                 @default(false) @map("last_minute_ok")
+  tsaPreCheck         Boolean                 @default(false) @map("tsa_pre_check")
+  securityClearance   Boolean                 @default(false) @map("security_clearance")
+  availableDays       String[]                @map("available_days")
+  availableTimeWindows String[]               @map("available_time_windows")
+
+  // Media Uploads
+  headshotUrl         String?                 @map("headshot_url")
+  fullBodyUrl         String?                 @map("full_body_url")
+  resumeUrl           String?                 @map("resume_url")
+  introVideoUrl       String?                 @map("intro_video_url")
+
+  // Legal Agreements
+  certifyAccuracy     Boolean                 @default(false) @map("certify_accuracy")
+  consentDataStorage  Boolean                 @default(false) @map("consent_data_storage")
+  understandFalseInfo Boolean                 @default(false) @map("understand_false_info")
+  consentPhotoUse     Boolean                 @default(false) @map("consent_photo_use")
+
+  // Admin
+  adminNotes          String?                 @db.Text @map("admin_notes")
+  starred             Boolean                 @default(false)
+  tags                String[]
+
+  // Timestamps
+  submittedAt         DateTime?               @map("submitted_at")
+  createdAt           DateTime                @default(now()) @map("created_at")
+  updatedAt           DateTime                @updatedAt @map("updated_at")
+
+  // Relations
+  user                User?                   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  gigs                ApplicationGig[]
+
+  @@index([status])
+  @@index([applicationType])
+  @@index([email])
+  @@index([createdAt])
+  @@index([submittedAt])
+  @@map("ambassador_applications")
+}
+
+model ApplicationGig {
+  id              String   @id @default(cuid())
+  applicationId   String   @map("application_id")
+  event_name      String   @map("event_name")
+  agencyName      String   @map("agency_name")
+  clientBrand     String   @map("client_brand")
+  location        String
+  dateWorked      String   @map("date_worked")
+  role            String
+  ratePaid        String?  @map("rate_paid")
+  description     String?  @db.Text
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  application     AmbassadorApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("application_gigs")
 }

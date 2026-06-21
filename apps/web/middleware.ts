@@ -13,8 +13,11 @@ const isPublicRoute = createRouteMatcher([
   "/pricing(.*)",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/apply(.*)",
   "/api/webhooks(.*)",
   "/api/cron(.*)",
+  "/api/uploadthing(.*)",
+  "/api/ambassador-applications(.*)",
 ]);
 
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);

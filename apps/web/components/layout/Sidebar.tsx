@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -39,6 +40,7 @@ const agencyNav = [
 const adminNav = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Members", href: "/admin/members", icon: Users },
+  { label: "Applicants", href: "/admin/applicants", icon: ClipboardList },
   { label: "Agencies", href: "/admin/agencies", icon: Building2 },
   { label: "Violations", href: "/admin/violations", icon: FileWarning },
   { label: "Legal Cases", href: "/admin/legal-cases", icon: Scale },
